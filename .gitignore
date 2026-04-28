@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Gmail API Credentials & Tokens (CRITICAL)
+credentials.json
+token.json
+client_secret*.json
+
+# Data & Backups
+rules.json.bak
+unclassified_emails.json
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
