@@ -1,0 +1,146 @@
+[
+  {
+    "name": "🏦 金融・銀行",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#0b804b"
+    },
+    "query": "from:(paypay-bank.co.jp OR rakuten-bank.co.jp OR miyagin.co.jp OR vpass.ne.jp OR paypay-card.co.jp OR jaccs.co.jp OR rakuten-sec.co.jp OR bitflyer.com OR jfc.go.jp OR jp-bank.japanpost.jp OR janetbank.jp OR jicc-skaiji-service.jp OR loan-uketsuke-ai.jp OR nicos.co.jp OR cedyna-mail.jp OR cedyna.co.jp OR omc-card.co.jp OR mailer.ja-apis.org OR minkabu.jp OR smbc-card.com OR mail.rakuten-card.co.jp OR moneyforward.com OR otp-auth.net OR entry.ja-netloan.jp OR orico.co.jp OR sbi-fc.com OR dn.smbc.co.jp OR hfc.honda.co.jp OR jaccscard.co.jp OR m-waas.jp) OR subject:(\"お支払い金額\" OR \"お引き落とし\" OR \"ご請求額\")",
+    "description": "銀行口座、クレジットカードの明細、証券や仮想通貨などの金融機関関連のメール"
+  },
+  {
+    "name": "💳 決済・ポイント",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#f2c960"
+    },
+    "query": "from:(pay.rakuten.co.jp OR emagazine.rakuten.co.jp OR paypal.com OR point.recruit.co.jp OR payments-noreply@google.com OR payment1.spmode.ne.jp OR tsite.jp OR jalan.net OR mercari.jp OR pointcard.rakuten.co.jp OR edy.rakuten.co.jp OR coupon.rakuten.co.jp OR checkout.rakuten.co.jp OR sevenmp.omni7.jp OR googlepay-noreply@google.com OR googlewallet-noreply@google.com OR quocardpay.com OR infcurion.com OR jrepoint.jp OR sna.jp OR skynetasia.co.jp OR mail.discoverglo.jp OR getmiles.com OR starbucks.co.jp OR mobilesuica.com OR quocard.info OR tabishitaku.com OR epark.jp OR bitwallet.co.jp OR recruit-id-point.jp OR mul-pay.com OR paypay-corp.co.jp OR webmoney.ne.jp) OR subject:(\"dポイント\" OR \"ポイントがたまる\" OR \"領収書\" OR \"決済完了\" OR \"ポイント加算\" OR \"ポイント数のお知らせ\" OR \"利用状況のお知らせ\" OR \"ポイント有効期限\" OR \"失効するマイル\" OR \"ポイントがご利用\")",
+    "description": "電子マネー、Pay系サービス、ポイントサービス、各種支払い完了通知"
+  },
+  {
+    "name": "🛒 ショッピング",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#ffad47"
+    },
+    "query": "(from:(amazon.co.jp OR microsoftstore.microsoft.com OR shop.rakuten.co.jp OR notify.cofo.jp OR email.sandisk.com OR minisforum.com OR email.westerndigital.com OR maicom.co.jp OR rakuten.co.jp OR cofo.jp OR megasports.jp OR msi.email OR audio-technica.co.jp OR nitori-net.jp OR easy-myshop.jp OR dell.com OR delljp.emailpowerreviews.com OR braun.jp OR amazon.com OR nortonstore.jp OR singlelife.co.jp OR anker.com OR impress.co.jp OR nsp.mdj.jp OR clubjt.jp OR members-ms.jp OR sandisk.com OR demae-can.com OR email.lecol.cc OR lecol.cc OR mos.jp OR m.mos.jp OR camp.mos.jp OR 2902.net OR bookoff.co.jp OR shokz.com OR msi-marketing.com OR alpen-group.jp OR minisforum.yahoo.com OR undoudou.jp OR thefos.co.jp OR edion.com OR pc-koubou.co.jp OR grailnet.jp OR smc.sgn.ne.jp OR sportsauthority.co.jp OR melcoinc.co.jp OR m1.buffalo.jp OR hands.net OR pizza-la.co.jp OR online.ysroad.co.jp OR pc-koubou.jp OR mikasa.ne.jp OR westerndigital.com OR wdc.com OR tumi.co.jp OR sonymobile.jp OR fril.jp OR shopifyemail.com OR unitcom.co.jp OR iqos.com OR edion.co.jp OR acemagic.jp OR cb-asahi.com OR cb-asahi.jp OR zotac.co.jp OR logi.com OR ark-pc.jp OR mouse-jp.co.jp OR weiec.jp OR yodobashi.com OR shop-deff.com OR miki-miki.co.jp OR vector.co.jp OR stardock.net OR regconfirm.com) OR subject:(\"注文\" OR \"購入\" OR \"セール\" OR \"お買い物\" OR \"お買い得\" OR \"ストア\" OR \"商品発送\" OR \"発送完了\")) -subject:(\"配達\" OR \"発送済み\" OR \"お届け完了\" OR \"お届け予定\" OR \"お荷物お届け\" OR \"問合せ番号\" OR \"配達済み\")",
+    "description": "ECサイトからの注文確認、セール情報、オンラインショッピング関連"
+  },
+  {
+    "name": "📦 配送・トラッキング",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#a4c2f4"
+    },
+    "query": "from:(shipment-tracking@amazon.co.jp OR kuronekoyamato.co.jp OR sagawa-exp.co.jp OR order-update@amazon.co.jp OR kks.homelogi.jp) OR subject:(\"配達中\" OR \"発送済み\" OR \"お届け完了\" OR \"お届け予定\" OR \"お荷物お届け\" OR \"問合せ番号\" OR \"配達済み\")",
+    "description": "Amazon配送、ヤマト運輸、佐川急便などのお荷物追跡・配達通知"
+  },
+  {
+    "name": "💻 開発・クラウド",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#434343"
+    },
+    "query": "from:(github.com OR aws.com OR marketplace.aws OR team.mongodb.com OR m.ngrok.com OR wandb.ai OR gitguardian.com OR CloudPlatform-noreply@google.com OR huggingface.co OR PlatformNotifications-noreply@google.com OR smartbearmail.com OR amazonaws.com OR awsapps.com OR signin.aws OR pinecone.io OR registrar.amazon OR cursor.com OR docker.com OR mongodb.com OR developers.facebook.com OR localstack.cloud OR windsurf.com OR windsurf.ai OR zed.dev OR noreply@google.com OR evernote.com OR email.evernote.com OR googleone-noreply@google.com OR googleone-updates-noreply@google.com OR dropbox.com OR firebase-noreply@google.com OR noreply-photos@google.com OR cws-noreply@google.com OR googledrive-noreply@google.com OR drive-shares-dm-noreply@google.com OR codeberg.org OR smartbear.com OR ngrok.com OR signup.aws OR googlecloud@google.com OR orcatec.net OR qiita.com OR msi-mail.com OR asuswebstorage.com OR oracle.com OR oracle-mail.com OR twocanoes.com OR googleone-benefits-noreply@google.com) OR subject:(\"Google データをダウンロード\")",
+    "description": "GitHub、AWS、Google Cloud、MongoDBなど開発ツールやクラウド基盤の通知"
+  },
+  {
+    "name": "🤖 AI・トレンド",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#8e63ce"
+    },
+    "query": "from:(claude.com OR perplexity.ai OR notebooklm-noreply@google.com OR ollama.com OR genspark.ai OR itmedia.co.jp OR anthropic.com OR x.ai OR dify.ai OR openai.com OR google-gemini-noreply@google.com OR manus.im OR googleaistudio-noreply@google.com OR shoeisha.jp OR newspicks.com OR perplexity.com OR cline.bot) OR subject:(\"AI \" OR \"ChatGPT\" OR \"Copilot\" OR \"LLM\")",
+    "description": "Claude、PerplexityなどのAIツール、IT系のニュースやトレンド情報"
+  },
+  {
+    "name": "🌐 Web・SEO",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#4a86e8"
+    },
+    "query": "from:(aioseo.com OR elementor.com OR wpbeginner.com OR wpconsent.com OR search-noreply@google.com OR blogmura.com OR analytics-noreply@google.com OR meowapps.com OR kadencewp.com OR livedoor.net) OR subject:(\"WordPress\" OR \"SEO\" OR \"ダークウェブ レポート\")",
+    "description": "WordPressプラグイン、SEOツール、Webサイト構築関連のお知らせ"
+  },
+  {
+    "name": "🎮 ゲーム・配信",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#b694e8"
+    },
+    "query": "from:(twitch.tv OR steampowered.com OR square-enix.com OR e-mail.hoyoverse.com OR accounts.nintendo.com OR epicgames.com OR razer.com OR wemod.com OR cdprojektred.com OR elderscrollsonline.com OR official.hoyoverse.com OR logitech.com OR gamecity.ne.jp OR linegames.support OR playstation.net OR psn.jp.playstation.com OR pmang.jp OR ccg.nintendo.com OR mbga.jp OR playblackdesert.com OR bandainamco-ol.co.jp OR banapassport.net OR e.ea.com OR konami.net OR nintendo.jp OR isao.net OR email.hoyoverse.com OR playstation.com OR gtarcade.com OR nexusmods.com OR a-lim.co.jp OR email.sonyentertainmentnetwork.com) OR subject:(\"ライブ配信\" OR \"Steam\" OR \"LINE POP\" OR \"モンスターファーム\")",
+    "description": "Twitchの配信通知、Steamセール情報、オンラインゲームやNintendoからのメール"
+  },
+  {
+    "name": "🎬 映像・エンタメ",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#cc3a21"
+    },
+    "query": "from:(netflix.com OR unext-info.jp OR tver.jp OR pia.co.jp OR primevideo.com OR amazonmusic.com OR mail.nhk OR spotify.com OR abema.tv OR ebookjapan.jp OR ebookjapan.co.jp OR youtube.com OR tsutaya.co.jp OR mail.dmm.com OR fc2.la OR fc2.xxx OR info_ebookstore@jp.sony.com OR mail1.apl.spmode.ne.jp OR nicovideo.jp OR shopjp.kobo.com OR tiktok.com) OR subject:(\"配信開始\" OR \"チケット\" OR \"キャンペーン\")",
+    "description": "NetflixやU-NEXTなどの動画配信サービス、チケットやエンタメ情報"
+  },
+  {
+    "name": "🔐 セキュリティ",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#ac2b16"
+    },
+    "query": "subject:(\"セキュリティ通知\" OR \"ログインしましたか\" OR \"認証コード\" OR \"パスワード\" OR \"本人確認\" OR \"ログイン通知\" OR \"新しいデバイス\" OR \"ワンタイムキー\" OR \"2要素認証\" OR \"確認メール\" OR \"サインイン\" OR \"パスキー\" OR \"セキュリティ情報\" OR \"セキュリティ番号\") OR from:(security@facebookmail.com OR verify@x.com OR accounts.logi.com OR webcenter.anser.or.jp OR no-reply@accounts.google.com OR account-update@amazon.co.jp OR account-update@amazon.com OR mail.instagram.com OR accountprotection.microsoft.com OR id.apple.com OR account.sony.com OR haveibeenpwned.com OR norton.com OR symantec.com OR verify@twitter.com OR google-noreply@google.com OR livedoor.fm OR tmail.nvidia.com OR internavi.ne.jp OR 7id.omni7.jp OR disneyaccount.com OR disney.jp OR wdy.docomo.ne.jp OR verificationemail.com OR google-apps-noreply@google.com OR noreply-findmydevice@google.com OR google-account-noreply@google.com)",
+    "description": "ログイン通知、パスワード変更、二段階認証コードなど重要なセキュリティ関連"
+  },
+  {
+    "name": "💼 仕事・副業",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#16a766"
+    },
+    "query": "from:(crowdworks.jp OR oddrosemary@yahoo.co.jp OR forms-receipts-noreply@google.com OR deepl.com OR mail.en-hyouban.com OR meetsmore.com OR hubspot.com OR keep-shares-dm-noreply@google.com OR wps.com OR ads-account-noreply@google.com) OR subject:(\"社労士\")",
+    "description": "クラウドワークスなど、業務委託や副業プラットフォームからの仕事情報"
+  },
+  {
+    "name": "🏢 生活・公的機関",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#a46a21"
+    },
+    "query": "from:(city.miyazaki.miyazaki.jp OR au-sonpo.co.jp OR mail.ja-kyosai.or.jp OR dormy.co.jp OR pepup.life OR jecc.jp OR maicom.co.jp OR charge0315@gmail.com OR livingpoint.jp OR networkprint.ne.jp OR ipa.go.jp OR cbt-s.com OR panasonic.jp OR myna.go.jp OR mykey.digital.go.jp OR dormy-ac.com OR aioinissaydowa.co.jp OR jasso.go.jp OR nenkin.go.jp OR tyo.esp.ac.jp OR so-net.ne.jp OR charge_mi@yahoo.co.jp OR eiken.or.jp OR maruzen.co.jp OR info.club-ntt-west.com OR printing.ne.jp OR honda-id.jp OR premium-club.jp OR pid.nhk.jp OR id.ja-kyosai.or.jp OR honda.co.jp OR ntt-finance.co.jp OR aos.com OR west-frc.com) OR subject:(\"安否状況\" OR \"賃料等\" OR \"入居\" OR \"保険\" OR \"奨学金\")",
+    "description": "自治体、健康保険、損保・共済、住居管理会社からの生活インフラ関連情報"
+  },
+  {
+    "name": "📅 予約・スケジュール",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#fcda83"
+    },
+    "query": "from:(calendar-notification@google.com OR beauty.hotpepper.jp OR mail.notion.so OR stransa.co.jp OR noreply-maps-timeline@google.com OR mbtn.jp OR tokyodisneyresort.jp OR hotpepper.jp OR calendar-noreply@google.com OR toyoko-inn.com OR booking.com OR tobutoptours.co.jp OR tabelog.com OR form.run) OR subject:(\"通知:\" OR \"ご来店ありがとうございました\" OR \"ご予約\" OR \"Reminder in\" OR \"予約が確定しました\")",
+    "description": "Googleカレンダーのリマインダー、美容室の予約確認、Notionタスク通知"
+  },
+  {
+    "name": "🎨 クリエイティブ",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#f691b3"
+    },
+    "query": "from:(sony.jp OR mail.adobe.com OR deviantart.com OR chordify.net OR ultimate-guitar.com OR capcut.com OR musicecosystems.jp OR canva.com OR e.adobe.com OR email.adobe.com OR musehub.com OR soundhouse.co.jp OR yamaha.com OR roland.com OR play.fast OR audio.com OR affinity.studio OR mysony.sony.co.jp OR jp.sony.com OR sony.co.jp OR irealpro.com OR playmemoriesonline.com OR bandlab.com OR e.fender.com OR shimamura.co.jp OR positivegrid.com OR maxon.net OR digimart.net OR rittor-music.co.jp OR picsart.com OR artistconnection.net OR stores.play.jp OR songsterr.com OR soundmart.jp OR minet.jp OR presonus.com)",
+    "description": "Adobe、音楽ツール、デザイン共有サイト、Sony製品などのクリエイティブ活動関連"
+  },
+  {
+    "name": "📱 SNS・アプリ",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#6d9eeb"
+    },
+    "query": "(from:(apl01.spmode.ne.jp OR mail.yahoo.co.jp OR redditmail.com OR discord.com OR googleplay-noreply@google.com OR googlestore-noreply@google.com OR news-googleplay@google.com OR googleplaypromo-noreply@google.com OR facebookmail.com OR families-noreply@google.com OR strava.com OR googlecommunityteam-noreply@google.com OR mb.softbank.jp OR mixi.jp OR facebookappmail.com OR threads.net OR mail.my.softbank.jp OR id.softbank.jp OR ymobile.jp OR mail.my.ymobile.jp OR twitter.com OR mydocomo.com OR plus.google.com OR email.skype.com OR myfitnesspal.com OR location-history-noreply@google.com OR garmin.com OR healthcare-tech.co.jp OR mail-noreply@google.com OR email.microsoft.com OR windowslivemail.com OR sonyericsson.co.jp OR anshinmode-docomo.jp OR healthplanet.jp OR no-reply@google.com OR noreply-local-guides@google.com OR excite.jp OR 16personalities.com OR oppo.com OR feedback.google.com OR noreply-play@google.com OR noreply-utos@google.com) -from:(verify@twitter.com)) -subject:(\"dポイント\")",
+    "description": "通信キャリアからのお知らせ、DiscordやReddit等のSNS通知、Google Playのアプリ情報"
+  },
+  {
+    "name": "📁 その他・未分類",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#999999"
+    },
+    "query": "from:(mailer-daemon@google.com OR mailer-daemon@googlemail.com OR piyo-maco-1981.cogepan-love@docomo.ne.jp OR tam.a.a.6.125@gmail.com OR rahha2119@major.ocn.ne.jp OR antigravity-noreply@google.com) OR subject:(\"Delivery Status Notification\" OR \"携帯忘れてるよね\" OR \"Re: \")",
+    "description": "分類しきれなかったエラーメール、個人間のやり取り、その他の未分類メール"
+  }
+]
