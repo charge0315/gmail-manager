@@ -59,6 +59,17 @@ class ZenMailCLI:
 
     def run_apply(self, args):
         applier = GmailRuleApplier(self.service, dry_run=args.dry_run)
+        
+        # 重複防止安全チェック: 既存のカスタムラベルが存在する場合に警告し終了する
+        if not args.dry_run and not args.force_apply:
+            user_labels = [label for name, label in applier.existing_labels.items() if label.get('type') == 'user']
+            if user_labels:
+                logger.error("【警告】Gmail 側にすでにカスタムラベルが存在します。")
+                logger.error("このまま適用すると、前回の古いラベルと重複してメールが分類される原因になります。")
+                logger.error("重複を防ぐため、適用前に 'python zenmail.py reset' を実行して初期化することを強く推奨します。")
+                logger.error("このまま強制適用する場合は、--force-apply オプションを指定して再実行してください。")
+                sys.exit(1)
+
         with open(args.config, 'r', encoding='utf-8') as f:
             import json
             rules = json.load(f)
@@ -103,6 +114,7 @@ def main():
     p_apply.add_argument('--dry-run', action='store_true', help='変更をプレビュー')
     p_apply.add_argument('--filter', action='store_true', help='自動振り分けフィルタも作成')
     p_apply.add_argument('--archive', action='store_true', help='ラベル付与時に受信トレイからアーカイブ')
+    p_apply.add_argument('--force-apply', action='store_true', help='既存ラベルが存在する場合でも強制的に適用')
 
     # reset
     p_reset = subparsers.add_parser('reset', help='ラベルとフィルタを初期化')
