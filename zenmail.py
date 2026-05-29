@@ -93,7 +93,7 @@ def main():
     p_analyze = subparsers.add_parser('analyze', help='メールを分析してルールを作成')
     p_analyze.add_argument('--max', type=int, default=500, help='分析対象の最大メール数')
     p_analyze.add_argument('--query', default='newer_than:1y', help='分析対象を絞り込むGmailクエリ (例: newer_than:1y)')
-    p_analyze.add_argument('--model', type=str, default='gemini-3.1-flash', help='使用するモデル')
+    p_analyze.add_argument('--model', type=str, default='gemini-3.5-flash', help='使用するモデル')
     p_analyze.add_argument('--prompt', type=str, help='AIへの追加指示')
     p_analyze.add_argument('--output', default='rules.json', help='出力ファイル名')
 

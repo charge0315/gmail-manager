@@ -39,7 +39,7 @@ def analyze_emails(query: str = "newer_than:1y", max_emails: int = 500) -> str:
         auth = GmailAuthenticator()
         service = auth.get_service()
         
-        # モデル名はデフォルトを使用 (gemini-3.1-flash)
+        # モデル名はデフォルトを使用 (gemini-3.5-flash)
         analyzer = GmailAnalyzer()
         data = analyzer.fetch_email_metadata(service, max_emails=max_emails, query=query)
         rules = analyzer.generate_rules(data)

@@ -21,7 +21,7 @@ socket.setdefaulttimeout(60)
 class GmailAnalyzer:
     """Gmailのデータを抽出し、Geminiでルールを生成するクラス"""
 
-    def __init__(self, model_name='gemini-3.1-flash'): 
+    def __init__(self, model_name='gemini-3.5-flash'): 
         self.api_key = os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("環境変数 GEMINI_API_KEY が設定されていません。")
