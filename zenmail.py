@@ -74,13 +74,18 @@ class ZenMailCLI:
             import json
             rules = json.load(f)
         
+        applied_labels = []
         for rule in rules:
             logger.info(f"\n--- ルール適用: {rule['name']} ---")
             label_id = applier.create_or_update_label(rule['name'], rule.get('color'))
             if label_id:
                 applier.apply_query_to_messages(rule['query'], label_id, rule['name'], archive=args.archive)
+                applied_labels.append(rule['name'])
                 if args.filter:
                     applier.create_filter(rule['name'], rule['query'], label_id, archive=args.archive)
+
+        # 未分類メールのフォールバック整理を実行
+        applier.apply_unclassified_fallback(applied_labels, archive=args.archive)
 
     def run_reset(self, args):
         resetter = GmailResetter(self.service)

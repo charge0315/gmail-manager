@@ -150,10 +150,42 @@ class GmailRuleApplier:
             else:
                 logger.error(f"フィルタ作成エラー: {e}")
 
+    def apply_unclassified_fallback(self, applied_labels, fallback_label_name="📁 その他・未分類", archive=False):
+        """他のどのカスタムラベルも付与されていない受信トレイのメールを検出し、その他ラベルを適用してアーカイブする"""
+        logger.info(f"\n--- 未分類メールの自動「その他」整理処理を開始 ---")
+        
+        # 1. その他ラベルの作成または更新
+        fallback_color = {"textColor": "#ffffff", "backgroundColor": "#999999"}
+        fallback_label_id = self.create_or_update_label(fallback_label_name, fallback_color)
+        if not fallback_label_id:
+            logger.error("その他ラベルの作成/取得に失敗したため、未分類処理を中断します。")
+            return
+
+        # 2. 除外クエリの構築
+        # 適用されたすべてのラベル（その他ラベル自体を除く）を除外対象にする
+        exclude_labels = [label for label in applied_labels if label != fallback_label_name]
+        
+        # クエリの組み立て (Gmail API では label:NAME または -label:NAME で除外可能)
+        # ラベル名にスペースや特殊文字がある場合はダブルクォーテーションで囲む
+        query_parts = ["label:INBOX"]
+        for label in exclude_labels:
+            query_parts.append(f'-label:"{label}"')
+        
+        # 二重処理防止のため、その他ラベル自体が既に付いているものも除外する
+        query_parts.append(f'-label:"{fallback_label_name}"')
+        
+        query = " ".join(query_parts)
+        logger.info(f"未分類メール検出用クエリ: {query}")
+        
+        # 3. メールへの適用（検索とラベル付与、必要に応じてアーカイブ）
+        self.apply_query_to_messages(query, fallback_label_id, fallback_label_name, archive=archive)
+
 def main():
+    import sys
     parser = argparse.ArgumentParser(description='提案されたルールをGmailに適用します。')
     parser.add_argument('--dry-run', action='store_true', help='実際の変更を行わずに、実行予定の内容を表示します')
     parser.add_argument('--filter', action='store_true', help='今後のメールにも適用されるフィルタを作成します')
+    parser.add_argument('--archive', action='store_true', help='ラベル付与時に受信トレイからアーカイブ')
     parser.add_argument('--config', default='rules.json', help='ルール設定ファイルのパス')
     args = parser.parse_args()
 
@@ -171,15 +203,20 @@ def main():
     if args.dry_run:
         logger.info("=== DRY-RUN モードで実行中 (変更は行われません) ===")
     
+    applied_labels = []
     for rule in rules:
         name = rule['name']
         logger.info(f"\n--- ルール処理: {name} ---")
         
         label_id = applier.create_or_update_label(name, rule.get('color'))
         if label_id:
-            applier.apply_query_to_messages(rule['query'], label_id, name)
+            applier.apply_query_to_messages(rule['query'], label_id, name, archive=args.archive)
+            applied_labels.append(name)
             if args.filter:
-                applier.create_filter(name, rule['query'], label_id)
+                applier.create_filter(name, rule['query'], label_id, archive=args.archive)
+
+    # 未分類メールのフォールバック整理を実行
+    applier.apply_unclassified_fallback(applied_labels, archive=args.archive)
 
     logger.info("\nすべての処理が完了しました！")
 
