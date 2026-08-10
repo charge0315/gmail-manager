@@ -1,6 +1,6 @@
 # MCP Server Codemap
 
-**最終更新日:** 2026-04-28
+**最終更新日:** 2026-08-10
 **エントリーポイント:** `server.py`
 
 ## 概要
@@ -11,7 +11,7 @@ FastMCP フレームワークを使用して、ZenMail Automator の機能を外
 | ツール名 | 引数 | 説明 | 内部呼び出し |
 | :--- | :--- | :--- | :--- |
 | `reset_gmail` | なし | 全ラベル/フィルタ削除、INBOX 戻し。 | `GmailResetter` |
-| `analyze_emails` | `query`, `max_emails` | メールの分析と rules.json 生成。 | `GmailAnalyzer` |
+| `analyze_emails` | `query`, `max_emails`, `num_categories` | メールの分析と rules.json 生成（カテゴリ数動的指定）。 | `GmailAnalyzer` |
 | `apply_classification_rules` | `archive`, `create_filters` | 生成されたルールの適用。 | `GmailRuleApplier` |
 
 ## 動作フロー

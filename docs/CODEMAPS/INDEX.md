@@ -1,6 +1,6 @@
 # ZenMail Automator Codemap
 
-**最終更新日:** 2026-04-28
+**最終更新日:** 2026-08-10
 **エントリーポイント:** `zenmail.py` (CLI), `server.py` (MCP Server)
 
 ## アーキテクチャ
@@ -33,7 +33,7 @@ graph TD
 
     subgraph Google APIs
         gmail[Gmail API]
-        gemini[Gemini 3.1 API]
+        gemini[Gemini 3.6 / 3.1 API]
     end
 
     auth --> gmail
@@ -49,7 +49,7 @@ graph TD
 | `server.py` | **MCPサーバーコア**。FastMCP を使用し、Gmail 操作ツールを AI に提供。 | `fastmcp`, `auth`, `analyze`, `apply_rules`, `reset` |
 | `zenmail.py` | 統合CLI。`analyze`, `apply`, `reset` のローカル実行用インターフェース。 | `auth`, `analyze`, `apply_rules`, `reset` |
 | `auth.py` | Google OAuth2 認証、IPv4 強制パッチ。 | `google-auth`, `google-api-python-client` |
-| `analyze.py` | メールの分析、Gemini 3.1 を用いた `rules.json` 生成。 | `google-genai`, `auth` |
+| `analyze.py` | メールの分析、Gemini 3.6/3.1 を用いた `rules.json` 生成（カテゴリ数の動的指定対応）。 | `google-genai`, `auth` |
 | `apply_rules.py` | ラベル作成、メール移動（アーカイブ対応）、フィルタ作成。 | `auth`, `googleapiclient` |
 | `reset.py` | ラベルやフィルタの削除、受信トレイへの完全復元。 | `auth`, `googleapiclient` |
 | `utils.py` | リトライロジック、パケット待機、ロギングなどの共通ユーティリティ。 | `time`, `logging` |
@@ -57,7 +57,7 @@ graph TD
 ## データフロー
 
 1. **初期化 (Reset)**: `reset.py` が既存のラベル/フィルタを消去し、INBOX をクリーンにする。
-2. **分析 (Analyze)**: `analyze.py` が過去のメールを収集し、Gemini 3.1 が `rules.json` を提案。
+2. **分析 (Analyze)**: `analyze.py` が過去のメールを収集し、Gemini 3.6/3.1 が指定されたカテゴリ数で `rules.json` を提案。
 3. **適用 (Apply)**: `apply_rules.py` が `rules.json` を元に Gmail 側を再構築。
 4. **MCP 経由の操作**: AI アシスタントが `server.py` を通じて上記のフローをオンデマンドで実行。
 
