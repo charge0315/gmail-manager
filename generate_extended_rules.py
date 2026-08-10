@@ -19,6 +19,10 @@ def main():
     with open('unclassified_emails.json', 'r', encoding='utf-8') as f:
         unclassified_data = json.load(f)
 
+    num_existing = len(existing_rules)
+    num_min_target = num_existing + 5
+    num_max_target = num_existing + 10
+
     # 送信者ごとの頻度と件名を分析
     summary = {}
     for data in unclassified_data:
@@ -34,15 +38,15 @@ def main():
     rules_text = json.dumps(existing_rules, ensure_ascii=False, indent=2)
 
     prompt = f"""
-あなたはGmail整理の専門家です。現在15個のカテゴリでGmailを自動整理していますが、まだ多くのメールが「その他」に分類されてしまっています。
-ユーザーからのフィードバックに基づき、**「できるだけその他に偏らず、カテゴリ数を20〜25個程度に増やして、より美しく詳細に分類する」**ための新しい整理ルールを作成してください。
+あなたはGmail整理の専門家です。現在{num_existing}個のカテゴリでGmailを自動整理していますが、まだ多くのメールが「その他」に分類されてしまっています。
+ユーザーからのフィードバックに基づき、**「できるだけその他に偏らず、カテゴリ数を{num_min_target}〜{num_max_target}個程度に増やして、より美しく詳細に分類する」**ための新しい整理ルールを作成してください。
 
-提供された「既存の15カテゴリの定義」と「未分類メールのデータ」を徹底的に分析し、以下のタスクを実行してください。
+提供された「既存の{num_existing}カテゴリの定義」と「未分類メールのデータ」を徹底的に分析し、以下のタスクを実行してください。
 
-1. **既存の15カテゴリのクエリを強化**し、関連する未分類メールを適切に吸収できるようにしてください。
+1. **既存の{num_existing}カテゴリのクエリを強化**し、関連する未分類メールを適切に吸収できるようにしてください。
 2. **新規カテゴリを5〜10個追加**してください。未分類メール（送信頻度の高いもの）から、意味のあるテーマを持つ新カテゴリを抽出してください。
    （例：ホンダ等の「🚗 マイカー・車」、東横インやBooking.com等の「🏨 旅行・ホテル予約」、Garmin等の「🏃 スポーツ・スマートウォッチ」、重要通知やセキュリティ等の「🔔 重要なお知らせ」など）
-3. 新しいルールセットは、**合計20個から最大25個のカテゴリ**で構成してください。
+3. 新しいルールセットは、**合計{num_min_target}個から最大{num_max_target}個のカテゴリ**で構成してください。
 4. 各カテゴリの「backgroundColor」は、以下の Gmail API で許可されたカラーリストから選んでください（重複可）：
    #000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff,
    #fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3,
@@ -56,18 +60,18 @@ def main():
    textColor は常に "#ffffff" にしてください。
 5. 出力は、カテゴリ定義のJSON配列のみを返してください。
 
-【既存の15カテゴリの定義】
+【既存の{num_existing}カテゴリの定義】
 {rules_text}
 
 【未分類メールのデータ（送信頻度順抜粋）】
 {unclassified_text[:30000]}
 """
 
-    logger.info("Gemini 3.1 Pro でカテゴリを拡張し、新しいルールセットを生成しています...")
+    logger.info(f"Gemini 3.1 Pro でカテゴリを拡張し、新しいルールセットを生成しています (目標: {num_min_target}〜{num_max_target})...")
     client = genai.Client(api_key=api_key)
     try:
         response = client.models.generate_content(
-            model='gemini-3.1-pro-preview',
+            model='gemini-3.1-pro',
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type='application/json',

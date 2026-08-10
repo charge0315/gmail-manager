@@ -1,6 +1,6 @@
 # ZenMail Automator
 
-ZenMail Automator は、最新の **Gemini 3.5 シリーズ (Flash) / 3.1 シリーズ (Pro)** を活用して Gmail の受信トレイを賢く、自動的に整理するためのツールセットです。
+ZenMail Automator は、最新の **Gemini 3.6 シリーズ (Flash) / 3.1 シリーズ (Pro)** を活用して Gmail の受信トレイを賢く、自動的に整理するためのツールセットです。
 新たに **MCP (Model Context Protocol) サーバー** としての機能が追加され、Claude Desktop などの AI アシスタントから直接 Gmail を操作・整理できるようになりました。
 
 過去のメール履歴を分析し、あなたのライフスタイルに最適な **22 個のカテゴリ**（21の主要カテゴリ + 「📁 その他・未分類」）を自動生成。複雑な検索クエリを手動で書くことなく、動的なフォールバック機能によって「Inbox Zero（受信トレイを空にする）」を100%確実に実現するための完全な反復的ワークフローを提供します。
@@ -10,7 +10,7 @@ ZenMail Automator は、最新の **Gemini 3.5 シリーズ (Flash) / 3.1 シリ
 ## 🌟 主要な特徴
 
 - **🤖 ハイブリッド AI モデル分析**:
-  初期の広範なルール分析には高速・低コストな `gemini-3.5-flash` を使用し、未分類メールに基づいた高度なルール洗練には高性能な `gemini-3.1-pro-preview` を使用するハイブリッド構成。
+  初期の広範なルール分析には高速・低コストな `gemini-3.6-flash` を使用し、未分類メールに基づいた高度なルール洗練には高性能な `gemini-3.1-pro` を使用するハイブリッド構成。
 - **🔌 MCP (Model Context Protocol) サーバー対応**:
   Docker ベースの MCP サーバーとして動作し、AI アシスタント (Claude Desktop 等) から Gmail のリセット、分析、整理ルールの適用を自然言語で直接実行可能。
 - **📈 反復的なルール強化ワークフロー**:
@@ -32,7 +32,7 @@ ZenMail Automator は、最新の **Gemini 3.5 シリーズ (Flash) / 3.1 シリ
 *   **`apply_rules.py`**: `rules.json` に基づいて、Gmail 上にカラー付きラベルを作成、過去メールの分類・アーカイブ、将来の自動振り分け用フィルタを作成。
 *   **`reset.py`**: カスタムラベルとフィルタを完全削除し、全メッセージを受信トレイ（INBOX）へ安全に差し戻すリカバリ処理。
 *   **`extract_unclassified.py`**: 受信トレイに残っている未分類メールを抽出し、一時データ（`unclassified_emails.json`）として保存。
-*   **`refine_rules.py`**: 未分類メールの傾向を `gemini-3.1-pro-preview` に再分析させ、既存のルールをスマートに補強（16番目の「📁 その他・未分類」を追加）。
+*   **`refine_rules.py`**: 未分類メールの傾向を `gemini-3.1-pro` に再分析させ、既存のルールをスマートに補強（16番目の「📁 その他・未分類」を追加）。
 *   **`server.py`**: `FastMCP` フレームワークを用いた MCP サーバーのエントリポイント。
 *   **`utils.py`**: 指数バックオフ付きリトライ処理や API 呼び出し間ウェイトなど、Gmail API 通信を安定させるためのユーティリティ。
 
@@ -78,7 +78,8 @@ python zenmail.py analyze --max 500 --query "newer_than:1y"
 *   **`analyze` の主なオプション:**
     *   `--max`: 分析対象とするメールの最大数（デフォルト: `500`）。
     *   `--query`: 分析対象の絞り込み用クエリ（デフォルト: `newer_than:1y`）。
-    *   `--model`: ルール分析に使用するモデル（デフォルト: `gemini-3.5-flash`）。
+    *   `--model`: ルール分析に使用するモデル（デフォルト: `gemini-3.6-flash`）。
+    *   `--num-categories`: 生成する初期カテゴリ数（デフォルト: `15`）。
     *   `--prompt`: AI に対する追加のカスタム整理指示。
     *   `--output`: ルール定義の出力先（デフォルト: `rules.json`）。
 
@@ -114,7 +115,7 @@ python zenmail.py apply --archive --filter
     ```bash
     python refine_rules.py
     ```
-    `rules.json` と `unclassified_emails.json` を読み込み、`gemini-3.1-pro-preview` が既存クエリをスマートに補強します。また、一括適用（整理）の実行時には、定義されたすべてのカスタムラベルを対象から除外する動的クエリを生成し、いかなるルールにも該当しなかった受信トレイ内のメールを 100% 確実にキャッチするため、22番目のカテゴリとして 「📁 その他・未分類」 （背景色: グレー）を自動的に割り当ててアーカイブします。
+    `rules.json` と `unclassified_emails.json` を読み込み、`gemini-3.1-pro` が既存クエリをスマートに補強します。また、一括適用（整理）の実行時には、定義されたすべてのカスタムラベルを対象から除外する動的クエリを生成し、いかなるルールにも該当しなかった受信トレイ内のメールを 100% 確実にキャッチするため、22番目のカテゴリとして 「📁 その他・未分類」 （背景色: グレー）を自動的に割り当ててアーカイブします。
     *(既存の `rules.json` は `rules.json.bak` として自動バックアップされます)*
 3.  **強化されたルールの再適用:**
     ```bash
@@ -175,7 +176,7 @@ AI アシスタントは以下のツールを介して Gmail 操作を自律的�
     Gmail の初期化（カスタムラベル・フィルタの完全削除、全メールの INBOX 差し戻し）。
 *   **`analyze_emails`**:
     過去メールを分析して最適な分類ルール（`rules.json`）を AI で生成します。
-    *   *引数*: `query` (デフォルト: `"newer_than:1y"`), `max_emails` (デフォルト: `500`)
+    *   *引数*: `query` (デフォルト: `"newer_than:1y"`), `max_emails` (デフォルト: `500`), `num_categories` (デフォルト: `15`)
 *   **`apply_classification_rules`**:
     `rules.json` のルールを Gmail に適用（ラベル作成、メールのアーカイブ、フィルタの自動設定を一括実行）。
     *   *引数*: `archive` (デフォルト: `true`), `create_filters` (デフォルト: `true`)

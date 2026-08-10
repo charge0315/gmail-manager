@@ -33,16 +33,16 @@ def reset_gmail() -> str:
         return f"リセット中にエラーが発生しました: {str(e)}"
 
 @mcp.tool()
-def analyze_emails(query: str = "newer_than:1y", max_emails: int = 500) -> str:
-    """Gmailのメールを分析し、最適な分類ルール（rules.json）をAIで生成します。"""
+def analyze_emails(query: str = "newer_than:1y", max_emails: int = 500, num_categories: int = 15) -> str:
+    """Gmailのメールを分析し、指定したカテゴリ数（デフォルト: 15）の分類ルール（rules.json）をAIで生成します。"""
     try:
         auth = GmailAuthenticator()
         service = auth.get_service()
         
-        # モデル名はデフォルトを使用 (gemini-3.5-flash)
+        # モデル名はデフォルトを使用 (gemini-3.6-flash)
         analyzer = GmailAnalyzer()
         data = analyzer.fetch_email_metadata(service, max_emails=max_emails, query=query)
-        rules = analyzer.generate_rules(data)
+        rules = analyzer.generate_rules(data, num_categories=num_categories)
         
         if rules:
             with open('rules.json', 'w', encoding='utf-8') as f:

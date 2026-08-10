@@ -1,7 +1,7 @@
 # ZenMail Automator: 徹底整理プロジェクト計画書
 
 ## 概要
-AI（Gemini 3.1 Pro）を活用し、過去1年間の全メールデータを分析した上で、最適な15のカテゴリによるGmailの自動整理・再構築を行います。
+AI（Gemini 3.1 Pro / 3.6 Flash）を活用し、過去1年間の全メールデータを分析した上で、最適な15のカテゴリによるGmailの自動整理・再構築を行います。
 また、本機能を MCP (Model Context Protocol) サーバーとして提供し、AI アシスタントからの操作を可能にします。
 
 ## 実行フェーズ
@@ -22,7 +22,7 @@ AI（Gemini 3.1 Pro）を活用し、過去1年間の全メールデータを分
 ### 3. Gemini 3.1 Pro による高度分析 (Analysis Phase) ✅
 - **目的**: 15個の最適な分類ルールとクエリを生成する。
 - **タスク**:
-  - [x] 使用モデル: `gemini-3.1-pro-preview` / `gemini-3.1-flash`
+  - [x] 使用モデル: `gemini-3.1-pro` / `gemini-3.6-flash`
   - [x] 分類数: 最大15個 + その他。
   - [x] カラー設定: Gmail API標準パレット。
 

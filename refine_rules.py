@@ -20,8 +20,8 @@ def main():
     with open('unclassified_emails.json', 'r', encoding='utf-8') as f:
         unclassified_data = json.load(f)
 
-    # モデルは gemini-3.1-pro-preview を使用
-    analyzer = GmailAnalyzer(model_name='gemini-3.1-pro-preview')
+    # モデルは gemini-3.1-pro を使用
+    analyzer = GmailAnalyzer(model_name='gemini-3.1-pro')
     
     refined_rules = analyzer.refine_existing_rules(existing_rules, unclassified_data)
     

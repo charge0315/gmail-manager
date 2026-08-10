@@ -50,7 +50,7 @@ class ZenMailCLI:
         if not email_data:
             logger.warning("分析対象のメールが見つかりませんでした。")
             return
-        rules = analyzer.generate_rules(email_data, custom_instructions=args.prompt)
+        rules = analyzer.generate_rules(email_data, num_categories=args.num_categories, custom_instructions=args.prompt)
         if rules:
             with open(args.output, 'w', encoding='utf-8') as f:
                 import json
@@ -109,7 +109,8 @@ def main():
     p_analyze = subparsers.add_parser('analyze', help='メールを分析してルールを作成')
     p_analyze.add_argument('--max', type=int, default=500, help='分析対象の最大メール数')
     p_analyze.add_argument('--query', default='newer_than:1y', help='分析対象を絞り込むGmailクエリ (例: newer_than:1y)')
-    p_analyze.add_argument('--model', type=str, default='gemini-3.5-flash', help='使用するモデル')
+    p_analyze.add_argument('--model', type=str, default='gemini-3.6-flash', help='使用するモデル')
+    p_analyze.add_argument('--num-categories', type=int, default=15, help='生成するカテゴリ数')
     p_analyze.add_argument('--prompt', type=str, help='AIへの追加指示')
     p_analyze.add_argument('--output', default='rules.json', help='出力ファイル名')
 

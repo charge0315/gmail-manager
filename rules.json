@@ -1,191 +1,137 @@
 [
   {
-    "name": "💳 金融・決済",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#0b804b"
-    },
-    "query": "from:(paypal.com OR paypay-bank.co.jp OR rakuten-bank.co.jp OR vpass.ne.jp OR jaccs.co.jp OR jp-bank.japanpost.jp OR anser.or.jp OR jfc.go.jp OR miyagin.co.jp OR rakuten-sec.co.jp OR bitflyer.com OR system@p01.mul-pay.com OR kaitou@jaccscard.co.jp OR uketuke@jaccscard.co.jp)",
-    "description": "PayPalやPayPay銀行、楽天銀行、クレジットカード、証券、決済手続き完了などの通知メール"
-  },
-  {
-    "name": "🛒 ショッピング",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#ffad47"
-    },
-    "query": "from:(pay.rakuten.co.jp OR emagazine.rakuten.co.jp OR amazon.co.jp OR mercari.jp OR microsoftstore.microsoft.com OR googlestore-noreply@google.com OR email.sandisk.com OR notify.cofo.jp OR musicecosystems.jp OR shop.rakuten.co.jp OR support@fril.jp)",
-    "description": "Amazon、楽天、メルカリ、ラクマ、各種ECストアからの購入確認やキャンペーン案内メール"
-  },
-  {
-    "name": "💻 開発・技術インフラ",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#285bac"
-    },
-    "query": "from:(github.com OR gitguardian.com OR aws.com OR amazonaws.com OR marketplace.aws OR CloudPlatform-noreply@google.com OR ollama.com OR huggingface.co OR noreply.itmedia.co.jp OR mail.wandb.ai OR m.ngrok.com OR team.mongodb.com OR dev@orcatec.net OR cws-noreply@google.com OR firebase-noreply@google.com)",
-    "description": "GitHub、AWS、GCP、Firebase、HuggingFace、LLMツール等、開発プロジェクトやクラウドインフラ、開発者向け通知"
-  },
-  {
-    "name": "🎮 エンタメ・配信",
+    "name": "🎮 配信・コミュニティ",
     "color": {
       "textColor": "#ffffff",
       "backgroundColor": "#a479e2"
     },
-    "query": "from:(twitch.tv OR steampowered.com OR members.netflix.com OR account.netflix.com OR discord.com OR square-enix.com OR tver.jp OR unext-info.jp OR mail.capcut.com OR pia.co.jp OR e-mail.hoyoverse.com OR mail.ultimate-guitar.com OR chordify.net OR playstation.com OR nicovideo.jp OR TikTok OR ea@e.ea.com)",
-    "description": "Twitch、Steam、PlayStation、Netflix、Discord、配信、ゲーム、音楽関連 of 通知やメルマガ"
+    "query": "from:(twitch.tv OR discord.com OR x.com OR facebookmail.com)",
+    "description": "TwitchやDiscord、SNSからのライブ配信通知やコミュニティの言及通知メール"
   },
   {
-    "name": "🌐 Googleサービス",
+    "name": "💻 開発・プログラミング",
     "color": {
       "textColor": "#ffffff",
       "backgroundColor": "#4a86e8"
     },
-    "query": "from:(accounts.google.com OR googleplay.com OR googleplay-noreply@google.com OR payments-noreply@google.com OR googleone-noreply@google.com OR googlecommunityteam-noreply@google.com OR calendar-notification@google.com OR NotebookLM-noreply@google.com OR googleone-benefits-noreply@google.com OR calendar-noreply@google.com OR location-history-noreply@google.com OR noreply-photos@google.com OR surveys@feedback.google.com OR drive-shares-dm-noreply@google.com OR keep-shares-dm-noreply@google.com)",
-    "description": "Googleアカウント、Google Play、Google One、カレンダー、フォト、ドライブ共有等、Googleエコシステム関連メール"
+    "query": "from:(github.com OR zenn.dev OR qiita.com OR ollama.com OR openai.com OR docker.com OR gitguardian.com OR ngrok.com)",
+    "description": "GitHubのCI/CD通知、Zenn/Qiitaの技術ニュース、AIツールや開発関連サービス"
   },
   {
-    "name": "📦 配送・追跡",
+    "name": "🛍️ ショッピング・EC",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#fad165"
+      "backgroundColor": "#ffad47"
     },
-    "query": "from:(kuronekoyamato.co.jp OR sagawa-exp.co.jp)",
-    "description": "ヤマト運輸、佐川急便など、お荷物の発送・お届け予定、完了通知メール"
+    "query": "from:(amazon.co.jp OR mercari.jp OR thebase.in OR nitori-net.jp OR tpgaw.jp OR shop.rakuten.co.jp OR hands.net) -from:(emagazine.rakuten.co.jp)",
+    "description": "Amazon、楽天ショップ、メルカリ、ヤマダデンキなどの注文確認や商品通知"
   },
   {
-    "name": "📝 ブログ・Web制作",
+    "name": "💳 決済・カード",
+    "color": {
+      "textColor": "#ffffff",
+      "backgroundColor": "#fb4c2f"
+    },
+    "query": "from:(pay.rakuten.co.jp OR payid.jp OR paypal.com OR stripe.com OR vpass.ne.jp OR smbc-card.com OR jaccs.co.jp)",
+    "description": "楽天ペイ、PayPal、PAY ID、三井住友カード、ジャックスなどの利用明細や決済完了通知"
+  },
+  {
+    "name": "🏦 銀行・証券・金融",
     "color": {
       "textColor": "#ffffff",
       "backgroundColor": "#16a766"
     },
-    "query": "from:(aioseo.com OR wpbeginner.com OR news-mail.elementor.com OR user-mail.elementor.com OR wpconsent.com OR hello@kadencewp.com OR support@meowapps.com)",
-    "description": "WordPress、Elementor、Kadence WP等、Webサイト運営やSEO、プラグインに関する通知・アドバイス"
+    "query": "from:(rakuten-sec.co.jp OR paypay-bank.co.jp OR rakuten-bank.co.jp OR bitflyer.com OR miyagin.co.jp OR promise.co.jp OR bk.mufg.jp OR jp-bank.japanpost.jp OR jfc.go.jp OR janetbank.jp)",
+    "description": "銀行口座の振込・入出金通知、暗号資産取引、証券口座、各種ローン関連の通知"
   },
   {
-    "name": "💼 クラウドソーシング",
+    "name": "🪙 ポイント・お得情報",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#43d692"
+      "backgroundColor": "#fad165"
     },
-    "query": "from:(sf.crowdworks.jp OR melma.crowdworks.jp OR crowdworks.jp OR magazine.crowdworks.jp)",
-    "description": "クラウドワークス事務局からのおすすめ案件、ログイン通知、本人確認等の業務関連メール"
+    "query": "from:(docomo.ne.jp OR pointcard.rakuten.co.jp OR emagazine.rakuten.co.jp OR point.recruit.co.jp OR clubjt.jp OR pepup.life)",
+    "description": "dポイント、楽天ポイント、リクルートポイントなどのポイント付与通知やお得なメルマガ"
   },
   {
-    "name": "🏠 住まい・生活",
+    "name": "🔒 アカウント・セキュリティ",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#ffd6a2"
+      "backgroundColor": "#434343"
     },
-    "query": "from:(maicom.co.jp OR dormy.co.jp OR livingpoint.jp)",
-    "description": "毎日コムネットや学生会館ドーミー等の住宅契約、賃料引き落とし、新生活サポートメール"
+    "query": "from:(1password.com OR accounts.google.com OR accountprotection.microsoft.com OR 7id.omni7.jp) OR subject:(\"セキュリティ通知\" OR \"パスワード\" OR \"パスキー\" OR \"ログイン\")",
+    "description": "1Passwordからの請求・セキュリティアラート、各サービスのログイン・認証通知"
   },
   {
-    "name": "🏛️ 行政・公共",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#999999"
-    },
-    "query": "from:(city.miyazaki.miyazaki.jp OR jecc.jp)",
-    "description": "宮崎市スマート申請などの行政手続きや、安否状況確認・訓練メール"
-  },
-  {
-    "name": "🛡️ 保険・健康",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#b9e4d0"
-    },
-    "query": "from:(info.au-sonpo.co.jp OR mail.ja-kyosai.or.jp OR pepup.life)",
-    "description": "au損保、JA共済、健康保険組合Pep Up等、各種保険やヘルスケア・ポイントプログラムに関する通知"
-  },
-  {
-    "name": "👥 SNS・個人送信",
+    "name": "🕹️ ゲーム・エンタメ",
     "color": {
       "textColor": "#ffffff",
       "backgroundColor": "#f691b3"
     },
-    "query": "from:(facebookmail.com OR redditmail.com OR deviantart.com OR charge0315@gmail.com OR rahha2119@major.ocn.ne.jp)",
-    "description": "Facebook、Reddit、DeviantArtなどのSNS通知、および個人間のメール連絡"
+    "query": "from:(steampowered.com OR square-enix.com OR hoyoverse.com OR playstation.com OR netflix.com OR unext-info.jp OR amazonmusic.com OR chordify.net)",
+    "description": "Steamのウィッシュリストセール、FF14/原神等のゲーム情報、動画・音楽サブスク"
   },
   {
-    "name": "✈️ 旅行・ライフスタイル",
+    "name": "🔌 ガジェット・家電",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#fcdee8"
+      "backgroundColor": "#3c78d8"
     },
-    "query": "from:(jalan.net OR beauty.hotpepper.jp OR point.recruit.co.jp OR member@recruit-id-point.jp OR tetsuzuki@hands.net)",
-    "description": "じゃらん、ホットペッパービューティー、リクルートID、東急ハンズなどのライフスタイル・会員サービス関連メール"
+    "query": "from:(sony.jp OR cofo.jp OR sandisk.com OR westerndigital.com OR minisforum.com OR googlestore-noreply@google.com OR microsoftstore.microsoft.com)",
+    "description": "Sony、COFO、SanDisk、MINISFORUM、Google Store等のハードウェア・ガジェット情報"
   },
   {
-    "name": "🧠 AI・生産性ツール",
+    "name": "📧 ニュースレター・Web情報",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#434343"
+      "backgroundColor": "#8e63ce"
     },
-    "query": "from:(mail.perplexity.ai OR email.claude.com OR mail.notion.so OR genspark.ai OR Perplexity Assistant <assistant@perplexity.com> OR Nick Baumann <nickbaumann@info.cline.bot>)",
-    "description": "Perplexity、Claude Code、Notion、Genspark、Cline等の最新AIサービスやコラボレーションツール関連通知"
+    "query": "from:(wpbeginner.com OR aioseo.com OR wpconsent.com OR itmedia.co.jp OR wandb.ai)",
+    "description": "WordPress関連、SEO情報、ITmedia（＠IT）、AI関連技術の購読ニュースレター"
   },
   {
-    "name": "⚙️ デバイス・ソフトウェア",
+    "name": "☁️ クラウド・Webインフラ",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#666666"
+      "backgroundColor": "#43d692"
     },
-    "query": "from:(mail.sony.jp OR mail.adobe.com OR accountprotection.microsoft.com OR accounts.logi.com OR minisforum.com OR buffering@m1.buffalo.jp OR dm@m1.buffalo.jp OR sales-info@pc-koubou.jp OR online_shop@ark-pc.jp OR recycle@unitcom.co.jp OR store+40110325921@t.shopifyemail.com)",
-    "description": "ソニー、アドビ、ロジクール、バッファロー、パソコン工房、アーク、MINISFORUM等のハードウェアやシステムセキュリティ通知"
+    "query": "from:(amazonaws.com OR CloudPlatform-noreply@google.com OR jpx-jquants.com)",
+    "description": "AWS、Google Cloud Platform、J-Quants APIなどのインフラ・データ提供サービス"
   },
   {
-    "name": "🏃 スポーツ・フィットネス",
+    "name": "🏛️ 行政・住まい・保険",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#149e60"
+      "backgroundColor": "#2a9c68"
     },
-    "query": "from:(garmin.com OR alerts@account.garmin.com OR garmin@registration.garmin.com OR garmin@orders.garmin.com OR garmin@inside.garmin.com OR legal.garmin.com OR melmaga@sportsauthority.co.jp OR eshop@sportsauthority.co.jp OR myfitnesspal.com OR support@healthplanet.jp)",
-    "description": "Garminスマートウォッチ、スポーツオーソリティ、MyFitnessPal、タニタヘルスプラネット等のスポーツ・健康管理メール"
+    "query": "from:(city.miyazaki.miyazaki.jp OR maicom.co.jp OR livingpoint.jp OR au-sonpo.co.jp OR ja-kyosai.or.jp OR jecc.jp OR eco-serv.jp)",
+    "description": "自治体スマート申請、賃貸・不動産管理、損害保険、防災・学校関係の通知"
   },
   {
-    "name": "🚗 マイカー・車",
+    "name": "📦 配送・予定通知",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#cf8933"
+      "backgroundColor": "#ffbc6b"
     },
-    "query": "from:(premium-club.jp OR hfc_hp_service12@mail.hfc.honda.co.jp OR hfc_hp_service11@mail.hfc.honda.co.jp OR honda-id.jp OR htc_questionnaire@honda.co.jp)",
-    "description": "Hondaインターナビ（点検通知等）、ホンダファイナンス、Honda電子契約など、マイカー・車関連の手続きメール"
+    "query": "from:(sagawa-exp.co.jp OR calendar-notification@google.com) OR subject:(\"発送済み\" OR \"配達中\" OR \"配達済み\" OR \"配送済み\")",
+    "description": "荷物の配送ステータス通知やGoogleカレンダーからの予定リマインダー"
   },
   {
-    "name": "🏨 宿泊・ホテル予約",
+    "name": "📚 資格・ナレッジ・イベント",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#cc3a21"
+      "backgroundColor": "#6d9eeb"
     },
-    "query": "from:(toyoko-inn.com OR recommend@mail.toyoko-inn.com OR user_registration@toyoko-inn.com OR booking.com OR no-reply-japan@hi.getmiles.com OR no-reply-japan@info.getmiles.com)",
-    "description": "東横INN、Booking.comなど、ホテル・宿泊予約および旅行マイル関連の通知メール"
+    "query": "from:(ipa.go.jp OR peatix.com OR obsidian.md OR updates.notion.so)",
+    "description": "IPA情報処理技術者試験情報、Peatixイベント、ObsidianやNotionなどナレッジツール"
   },
   {
-    "name": "🍔 フード・飲食予約",
+    "name": "📩 サポート・個別問い合わせ",
     "color": {
       "textColor": "#ffffff",
-      "backgroundColor": "#e66550"
+      "backgroundColor": "#999999"
     },
-    "query": "from:(tabelog.com OR pizza-la.co.jp OR tyuusenhanbai@smc.sgn.ne.jp OR kura934@mbtn.jp)",
-    "description": "食べログ（予約確認）、ピザーラ、サントリーキャンペーン、くら寿司（EPARK）などの飲食店予約・フード関連メール"
-  },
-  {
-    "name": "🛍️ ファッション・衣類",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#f7a7c0"
-    },
-    "query": "from:(grailnet.jp OR grail@grailnet.jp OR online.ysroad.co.jp)",
-    "description": "GRL（グレイル）、ワイズロード等、ファッション・アパレルやサイクルウェア関連のメール"
-  },
-  {
-    "name": "🔐 アカウント登録・システム通知",
-    "color": {
-      "textColor": "#ffffff",
-      "backgroundColor": "#434343"
-    },
-    "query": "from:(codeberg.org OR trustid.sbi-fc.com OR support@meowapps.com OR hello@kadencewp.com OR thehubspotteam@hubspot.com OR no-reply@signup.aws OR positivegrid.com OR id.smartbear.com OR info@anshinmode-docomo.jp OR info@wdy.docomo.ne.jp OR excite.jp OR tobutoptours.co.jp OR soundmart.jp OR niconico OR nicovideo.jp OR account@nicovideo.jp OR banapassport.net OR wps.com OR oppo.com OR webbilling_info@ntt-finance.co.jp OR healthcare-tech.co.jp)",
-    "description": "各種Webサービスのアカウント開設、2段階認証コード、パスワードリセット、ドコモdアカウント、重要システム通知など"
+    "query": "from:(support@hoxhyon.com) OR subject:(\"お問い合わせ\" OR \"不具合\" OR \"返金\" OR \"サポート\")",
+    "description": "製品不具合や注文トラブルなど、カスタマーサポートや個人間の個別やり取り"
   }
 ]

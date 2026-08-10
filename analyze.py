@@ -21,7 +21,7 @@ socket.setdefaulttimeout(60)
 class GmailAnalyzer:
     """Gmailのデータを抽出し、Geminiでルールを生成するクラス"""
 
-    def __init__(self, model_name='gemini-3.5-flash'): 
+    def __init__(self, model_name='gemini-3.6-flash'): 
         self.api_key = os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("環境変数 GEMINI_API_KEY が設定されていません。")
@@ -89,6 +89,8 @@ class GmailAnalyzer:
 
     def refine_existing_rules(self, existing_rules, unclassified_data):
         """既存のルールを未分類メールデータに基づいて強化する"""
+        num_existing = len(existing_rules)
+        num_target = num_existing + 1
         summary = {}
         for data in unclassified_data:
             s = data['sender']
@@ -103,18 +105,18 @@ class GmailAnalyzer:
         rules_text = json.dumps(existing_rules, ensure_ascii=False, indent=2)
         
         prompt = f"""
-あなたはGmail整理の専門家です。現在、15個のカテゴリで運用していますが、一部のメールがまだ分類されていません。
+あなたはGmail整理の専門家です。現在、{num_existing}個のカテゴリで運用していますが、一部のメールがまだ分類されていません。
 提供された「未分類メールのデータ」を分析し、以下の対応を行ってください。
 
-1. 既存の15個のカテゴリのクエリを強化し、可能な限り多くの未分類メールを既存カテゴリに振り分けてください。
-2. それでも分類しきれないメールのために、16番目のカテゴリとして 「📁 その他・未分類」 を新たに追加してください。
-3. 出力は合計16個の要素を持つJSON配列としてください。
+1. 既存の{num_existing}個のカテゴリのクエリを強化し、可能な限り多くの未分類メールを既存カテゴリに振り分けてください。
+2. それでも分類しきれないメールのために、{num_target}番目のカテゴリとして 「📁 その他・未分類」 を新たに追加してください。
+3. 出力は合計{num_target}個の要素を持つJSON配列としてください。
 
 【制約事項】
-- 既存の15個のカテゴリ名（name）は変更しないでください。
-- 16番目の名前は 「📁 その他・未分類」 としてください。
-- 16番目のクエリ（query）は、今回の未分類メールを確実にキャッチできるよう、主要な送信元ドメインやキーワードを列挙してください。
-- 各カテゴリの backgroundColor は、Gmail APIで許可されたリストから選んでください。16番目は #999999 (グレー) にしてください。
+- 既存の{num_existing}個のカテゴリ名（name）は変更しないでください。
+- {num_target}番目の名前は 「📁 その他・未分類」 としてください。
+- {num_target}番目のクエリ（query）は、今回の未分類メールを確実にキャッチできるよう、主要な送信元ドメインやキーワードを列挙してください。
+- 各カテゴリの backgroundColor は、Gmail APIで許可されたリストから選んでください。{num_target}番目は #999999 (グレー) にしてください。
 
 【既存のルール】
 {rules_text}
@@ -137,8 +139,8 @@ class GmailAnalyzer:
             logger.error(f"ルールの強化中にエラーが発生しました: {e}")
             return None
 
-    def generate_rules(self, email_data, custom_instructions=None):
-        """最新の google-genai SDK を使用して15個のルールを生成する"""
+    def generate_rules(self, email_data, num_categories=15, custom_instructions=None):
+        """最新の google-genai SDK を使用して指定された数のルールを生成する"""
         # 送信者ごとの頻度と件名を分析
         summary = {}
         for data in email_data:
@@ -155,7 +157,7 @@ class GmailAnalyzer:
         
         prompt = f"""
 あなたはGmail整理の専門家です。提供された「1年分のメール送信統計データ」に基づき、
-受信トレイを整理するための最適な「最大15個」のカテゴリと検索クエリを生成してください。
+受信トレイを整理するための最適な「最大{num_categories}個」のカテゴリと検索クエリを生成してください。
 
 【出力形式】
 JSON配列形式で、各要素は以下のフィールドを持つこと：
@@ -180,7 +182,7 @@ textColor は常に "#ffffff" にしてください。
 
 【戦略指示】
 - 単なる「送信者ごと」ではなく、「ショッピング」「金融」「開発」などの意味のある大きなカテゴリを優先してください。
-- 15個をフルに使って、漏れがないように分類してください。
+- {num_categories}個をフルに使って、漏れがないように分類してください。
 - クエリは、将来のメールにも適用可能な汎用性の高いものにしてください。
 
 【データ（送信頻度順抜粋）】
@@ -208,7 +210,8 @@ def main():
     # zenmail.py から呼び出されることを想定していますが、単体動作も維持
     parser = argparse.ArgumentParser()
     parser.add_argument('--max', type=int, default=500)
-    parser.add_argument('--model', type=str, default='gemini-3.1-flash')
+    parser.add_argument('--model', type=str, default='gemini-3.6-flash')
+    parser.add_argument('--num-categories', type=int, default=15)
     parser.add_argument('--prompt', type=str)
     args = parser.parse_args()
 
@@ -218,7 +221,7 @@ def main():
     
     analyzer = GmailAnalyzer(model_name=args.model)
     data = analyzer.fetch_email_metadata(service, max_emails=args.max)
-    rules = analyzer.generate_rules(data, custom_instructions=args.prompt)
+    rules = analyzer.generate_rules(data, num_categories=args.num_categories, custom_instructions=args.prompt)
     if rules:
         with open('rules.json', 'w', encoding='utf-8') as f:
             json.dump(rules, f, ensure_ascii=False, indent=2)
