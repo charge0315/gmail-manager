@@ -22,3 +22,9 @@ unclassified_emails.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Project configs & secrets (CRITICAL)
+accounts.json
+token*.json
+rules_*.json
+unclassified_emails_*.json

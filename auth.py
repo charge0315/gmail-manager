@@ -31,21 +31,25 @@ class GmailAuthenticator:
         'https://mail.google.com/',
         'https://www.googleapis.com/auth/gmail.settings.basic'
     ]
-    TOKEN_FILE = 'token.json'
     CREDENTIALS_FILE = 'credentials.json'
 
-    def __init__(self):
+    def __init__(self, account_id=None):
         self.creds = None
+        self.account_id = account_id
+        if account_id:
+            self.token_file = f'token_{account_id}.json'
+        else:
+            self.token_file = 'token.json'
 
     def get_credentials(self):
         """有効な資格情報を取得する。必要に応じてリフレッシュやログインを行う。"""
-        if os.path.exists(self.TOKEN_FILE):
-            self.creds = Credentials.from_authorized_user_file(self.TOKEN_FILE, self.SCOPES)
+        if os.path.exists(self.token_file):
+            self.creds = Credentials.from_authorized_user_file(self.token_file, self.SCOPES)
         
         if not self.creds or not self.creds.valid:
             if self.creds and self.creds.expired and self.creds.refresh_token:
                 try:
-                    logger.info("トークンをリフレッシュしています...")
+                    logger.info(f"[{self.account_id or 'default'}] トークンをリフレッシュしています...")
                     self.creds.refresh(Request())
                 except Exception as e:
                     logger.error(f"トークンのリフレッシュに失敗しました: {e}")
@@ -56,14 +60,14 @@ class GmailAuthenticator:
                     logger.error(f"{self.CREDENTIALS_FILE} が見つかりません。")
                     raise FileNotFoundError(f"{self.CREDENTIALS_FILE} is required for authentication.")
                 
-                logger.info("ブラウザで認証フローを開始します...")
+                logger.info(f"[{self.account_id or 'default'}] ブラウザで認証フローを開始します...")
                 flow = InstalledAppFlow.from_client_secrets_file(
                     self.CREDENTIALS_FILE, self.SCOPES)
                 self.creds = flow.run_local_server(port=0)
             
-            with open(self.TOKEN_FILE, 'w') as token:
+            with open(self.token_file, 'w') as token:
                 token.write(self.creds.to_json())
-                logger.info(f"新しいトークンを {self.TOKEN_FILE} に保存しました。")
+                logger.info(f"新しいトークンを {self.token_file} に保存しました。")
 
         return self.creds
 
@@ -72,10 +76,10 @@ class GmailAuthenticator:
         creds = self.get_credentials()
         return build('gmail', 'v1', credentials=creds)
 
-def get_gmail_service():
+def get_gmail_service(account_id=None):
     """既存コードとの互換性のためのヘルパー関数"""
     try:
-        auth = GmailAuthenticator()
+        auth = GmailAuthenticator(account_id=account_id)
         return auth.get_service()
     except Exception as e:
         logger.error(f"認証中にエラーが発生しました: {e}")

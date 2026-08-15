@@ -1,9 +1,9 @@
-# ZenMail Automator
+# Mail Organizer
 
-ZenMail Automator は、最新の **Gemini 3.6 シリーズ (Flash) / 3.1 シリーズ (Pro)** を活用して Gmail の受信トレイを賢く、自動的に整理するためのツールセットです。
-新たに **MCP (Model Context Protocol) サーバー** としての機能が追加され、Claude Desktop などの AI アシスタントから直接 Gmail を操作・整理できるようになりました。
+Mail Organizer は、最新の **Gemini 3.6 シリーズ (Flash) / 3.1 シリーズ (Pro)** を活用して、複数の Gmail アカウントおよび Outlook アカウントの受信トレイを賢く、自動的に整理するためのツールセットです。
+新たに **MCP (Model Context Protocol) サーバー** としての機能が追加され、Claude Desktop などの AI アシスタントから直接メールを操作・整理できるようになりました。
 
-過去のメール履歴を分析し、あなたのライフスタイルに最適な **22 個のカテゴリ**（21の主要カテゴリ + 「📁 その他・未分類」）を自動生成。複雑な検索クエリを手動で書くことなく、動的なフォールバック機能によって「Inbox Zero（受信トレイを空にする）」を100%確実に実現するための完全な反復的ワークフローを提供します。
+過去のメール履歴を分析し、あなたのライフスタイルに最適なカテゴリ（例: 22個のカテゴリ）を自動生成。Gmail では色分けラベルとフィルタの作成、Outlook ではフォルダ自動作成とフォルダ移動を用いて、複雑な検索クエリを手動で書くことなく「Inbox Zero（受信トレイを空にする）」を100%確実に実現するための完全な反復的ワークフローを提供します。
 
 ---
 
@@ -11,14 +11,14 @@ ZenMail Automator は、最新の **Gemini 3.6 シリーズ (Flash) / 3.1 シリ
 
 - **🤖 ハイブリッド AI モデル分析**:
   初期の広範なルール分析には高速・低コストな `gemini-3.6-flash` を使用し、未分類メールに基づいた高度なルール洗練には高性能な `gemini-3.1-pro` を使用するハイブリッド構成。
+- **📧 複数アカウント＆マルチプロバイダ対応 (Gmail / Outlook)**:
+  `accounts.json` にて定義された複数の Gmail アカウントおよび Outlook アカウントに対して一括して処理を実行可能です。
+- **📂 プロバイダに適した分類方式**:
+  Gmail では API による色付き「ラベル」と「自動振り分けフィルタ」を作成。フォルダ階層型の Outlook では、ラベルの代わりに「フォルダ」の動的作成とメールの「移動」による整理を行います。
 - **🔌 MCP (Model Context Protocol) サーバー対応**:
-  Docker ベースの MCP サーバーとして動作し、AI アシスタント (Claude Desktop 等) から Gmail のリセット、分析、整理ルールの適用を自然言語で直接実行可能。
-- **📈 反復的なルール強化ワークフロー**:
-  分類しきれなかったメールを自動抽出してルールを徐々に洗練・アップデートするプロセスを完備。使えば使うほど自動振り分けの精度が向上します。
-- **🛡️ 堅牢なネットワークと安定性設計**:
-  Windows 環境などの IPv6 接続不良によるタイムアウトを回避する **IPv4 接続強制パッチ**、指数バックオフによる**自動リトライ機能**、API レート制限を回避する**ウェイト処理（Pacing）**を標準搭載。大量のメール処理でも通信エラーを最小限に抑えます。
+  Docker ベース of MCP サーバーとして動作し、AI アシスタント (Claude Desktop 等) からメールの分析、適用、リセットを自然言語で直接実行可能。
 - **🧹 安全な「完全リセット」機能**:
-  作成したカスタムラベルやフィルタを一括削除し、アーカイブされたすべてのメールを受信トレイに戻す「元通り」復元機能を完備。いつでも安全にやり直せます。
+  作成したカスタムラベル/フォルダやフィルタを一括削除し、アーカイブ・移動されたすべてのメールを受信トレイに戻す「元通り」復元機能を完備。いつでも安全にやり直せます。
 
 ---
 
@@ -26,204 +26,156 @@ ZenMail Automator は、最新の **Gemini 3.6 シリーズ (Flash) / 3.1 シリ
 
 プロジェクトは以下のモジュールで構成されています：
 
-*   **`zenmail.py`**: 全体を取りまとめるメインの統合 CLI エントリポイント。
-*   **`auth.py`**: OAuth 2.0 認証を管理し、Google API のクライアントインスタンスを生成。IPv4 通信の強制化パッチもここで適用されます。
-*   **`analyze.py`**: 過去メールのメタデータを抽出し、Gemini API を使って分類ルール（`rules.json`）を生成・強化するコアロジック。
-*   **`apply_rules.py`**: `rules.json` に基づいて、Gmail 上にカラー付きラベルを作成、過去メールの分類・アーカイブ、将来の自動振り分け用フィルタを作成。
-*   **`reset.py`**: カスタムラベルとフィルタを完全削除し、全メッセージを受信トレイ（INBOX）へ安全に差し戻すリカバリ処理。
-*   **`extract_unclassified.py`**: 受信トレイに残っている未分類メールを抽出し、一時データ（`unclassified_emails.json`）として保存。
-*   **`refine_rules.py`**: 未分類メールの傾向を `gemini-3.1-pro` に再分析させ、既存のルールをスマートに補強（16番目の「📁 その他・未分類」を追加）。
-*   **`server.py`**: `FastMCP` フレームワークを用いた MCP サーバーのエントリポイント。
-*   **`utils.py`**: 指数バックオフ付きリトライ処理や API 呼び出し間ウェイトなど、Gmail API 通信を安定させるためのユーティリティ。
+*   **`mail_organizer.py`**: 全体を取りまとめるメインの統合 CLI エントリポイント。
+*   **`accounts.json`**: 処理対象とする Gmail / Outlook アカウントの設定ファイル。
+*   **`auth.py`**: Gmail OAuth 2.0 認証を管理し、アカウント別にトークンを保存。
+*   **`auth_outlook.py`**: Outlook OAuth 2.0 認証 (XOAUTH2) を管理し、アカウント別にトークンを保存。
+*   **`outlook_client.py`**: IMAP (XOAUTH2) 経由で Outlook アカウントを操作するクライアント。フォルダ名 Modified UTF-7 エンコード対応。
+*   **`query_evaluator.py`**: Gmail風の検索クエリを Python 側で判定するエンジン（Outlook の分類時に使用）。
+*   **`analyze.py`**: メールのメタデータを抽出し、Gemini API を使って分類ルールを生成するコアロジック。
+*   **`apply_rules.py`**: `rules.json` に基づいて Gmail 側にラベルとフィルタを適用するロジック。
+*   **`reset.py`**: Gmail のカスタムラベルとフィルタを完全削除し、全メッセージを受信トレイ（INBOX）へ安全に差し戻すリカバリ処理。
+*   **`server.py`**: MCP サーバーのエントリポイント。
+*   **`utils.py`**: 指数バックオフ付きリトライ処理など、メール操作通信を安定させるためのユーティリティ。
 
 ---
 
-## 🔐 認証セットアップ (OAuth 2.0)
+## 🔐 認証セットアップ
 
-Gmail API を安全に操作するため、Google OAuth 2.0 クライアント認証を使用します。
+### 1. Gmail アカウントの準備 (OAuth 2.0)
+Gmail API を操作するため、Google OAuth 2.0 クライアント認証を使用します。
 
-### 1. クレデンシャル (JSON) の準備
-1. [Google Cloud Console](https://console.cloud.google.com/) にアクセスし、プロジェクトを作成します。
-2. **Gmail API** を有効化します。
-3. 「OAuth 同意画面」を設定し、テストユーザーに自身の Gmail アドレスを追加します。
-4. 「認証情報」から **OAuth 2.0 クライアント ID** (デスクトップアプリ) を作成し、JSON 形式でダウンロードします。
-5. ダウンロードしたファイルを `credentials.json` という名前でプロジェクトのルートディレクトリに配置します。
+1. [Google Cloud Console](https://console.cloud.google.com/) でプロジェクトを作成し、**Gmail API** を有効化します。
+2. 「OAuth 同意画面」を設定し、テストユーザーに自身の Gmail アドレスを追加します。
+3. **OAuth 2.0 クライアント ID** (デスクトップアプリ) を作成し、JSON 形式でダウンロードします。
+4. ダウンロードしたファイルを `credentials.json` という名前でプロジェクトのルートディレクトリに配置します。
+5. 初回実行時にブラウザが起動し、アカウントごとに `token_<account_id>.json` が生成されます。
 
-### 2. 初回認証とトークンの生成
-Docker などのヘッドレス環境や MCP サーバーとして動かす前に、必ず**ローカル（ホスト側環境）で一度だけ**以下のコマンドを実行して認証を行ってください。
-```bash
-python auth.py
+### 2. Outlook アカウントの準備 (OAuth 2.0 / XOAUTH2)
+Microsoft 側の基本認証（アプリパスワード含む）廃止に伴い、OAuth 2.0 での接続が必要です。
+
+1. **[Azure ポータル](https://portal.azure.com/) にサインイン**します（Microsoft アカウントで無料で利用可能です）。
+2. 「**Microsoft Entra ID**」を選択します。
+3. 左側メニューの「**アプリの登録**」をクリックし、「**新規登録**」を選択します。
+4. 以下のように設定して「登録」をクリックします：
+    *   **名前**: `Mail-Organizer` (任意)
+    *   **サポートされているアカウントの種類**: 「**任意の組織のディレクトリ内のアカウントと、個人用の Microsoft アカウント (Skype、Xbox など)**」（※個人アカウントと組織アカウント両方に対応させるため必須）
+    *   **リダイレクト URI**: 種類に「**パブリック クライアント/ネイティブ (モバイルとデスクトップ)**」を選択し、値に `http://localhost` と入力。
+5. 登録完了画面に表示される「**アプリケーション (クライアント) ID**」（36桁のGUID）をコピーし、`accounts.json` の `client_id` に設定します。
+6. 左側メニューの「**API のアクセス許可**」をクリックし、「**アクセス許可の追加**」を選択します。
+    *   「**所属する組織が使用する API**」タブを選択し、検索窓に `Office 365 Exchange Online` と入力して選択します。
+    *   「**委任されたアクセス許可**」を選択し、アクセス許可の一覧から **`IMAP.AccessAsUser.All`** にチェックを入れ、「アクセス許可の追加」をクリックします。
+7. 初回実行時、ブラウザが起動し Microsoft アカウントのサインインと承認を求める画面が表示されます。認証完了後、アカウントごとに `token_outlook_<account_id>.json` が生成されます。
+
+---
+
+## ⚙️ アカウント設定 (`accounts.json`)
+
+ルートディレクトリに `accounts.json` を作成し、整理対象のアカウント情報を以下のように定義します。
+
+```json
+[
+  {
+    "id": "gmail_personal",
+    "name": "Gmail 個人用",
+    "type": "gmail",
+    "email": "yourname@gmail.com"
+  },
+  {
+    "id": "outlook_work",
+    "name": "Outlook 仕事用",
+    "type": "outlook",
+    "email": "yourname@outlook.com",
+    "imap_server": "outlook.office365.com",
+    "imap_port": 993,
+    "username": "yourname@outlook.com",
+    "client_id": "YOUR_AZURE_CLIENT_ID"
+  }
+]
 ```
-*   コマンドを実行すると、自動的にブラウザが開きます。
-*   操作する Gmail アカウントでログインし、アクセス権限を許可します。
-*   認証が成功すると、ルートディレクトリに `token.json` が生成されます。
-*   以降は、この `token.json` が有効期限を自動的にリフレッシュしながら認証を維持します。
+- **Gmail アカウント**: `id`, `name`, `type: "gmail"`, `email` を指定します。
+- **Outlook アカウント**: `id`, `name`, `type: "outlook"`, `email`, `username`, `client_id` を指定します。
 
 ---
 
-## 💻 CLI 利用ガイド (ローカル実行)
+## 💻 CLI 利用ガイド
 
 ### 1. 依存関係のインストール
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Inbox Zero を実現する 4 つのステップ
+### 2. 整理ワークフローの実行
 
 #### **ステップ 1: メールの収集と AI 分析**
-過去 1 年間のメールの送信者と件名（メタデータ）を分析し、最適な分類ルール（`rules.json`）を生成します。
+過去のメールデータを分析し、各アカウント用の分類ルール（`rules_{account_id}.json`）を生成します。
 ```bash
-python zenmail.py analyze --max 500 --query "newer_than:1y"
+# すべてのアカウントを分析する場合
+python mail_organizer.py analyze --max 500
+
+# 特定のアカウント（ID: gmail_personal）のみ分析する場合
+python mail_organizer.py analyze --account gmail_personal --max 500
 ```
-*   **`analyze` の主なオプション:**
-    *   `--max`: 分析対象とするメールの最大数（デフォルト: `500`）。
-    *   `--query`: 分析対象の絞り込み用クエリ（デフォルト: `newer_than:1y`）。
-    *   `--model`: ルール分析に使用するモデル（デフォルト: `gemini-3.6-flash`）。
-    *   `--num-categories`: 生成する初期カテゴリ数（デフォルト: `15`）。
-    *   `--prompt`: AI に対する追加のカスタム整理指示。
-    *   `--output`: ルール定義の出力先（デフォルト: `rules.json`）。
 
 #### **ステップ 2: ルール適用のシミュレーションと実行**
-生成された `rules.json` に基づき、Gmail 上にラベル（美しく色分けされたもの）を作成し、メールを整理します。
+生成されたルールに基づき、ラベルやフォルダの作成、およびメールの分類整理を行います。
 
 > [!TIP]
 > **安全なシミュレーションを実行する (Dry-Run)**
-> `--dry-run` を指定することで、実際の Gmail に変更を加えることなく、どのメールがどのように分類されるかのログを事前に確認できます。
+> `--dry-run` を指定することで、実際のメールボックスに変更を加えることなく、どのメールがどのように分類されるかのログを事前に確認できます。
 > ```bash
-> python zenmail.py apply --dry-run
+> python mail_organizer.py apply --dry-run
 > ```
 
-**本番適用（過去メールのアーカイブ ＆ 今後の自動振り分け設定）:**
+**本本適用（アーカイブ ＆ フォルダ移動）:**
 ```bash
-python zenmail.py apply --archive --filter
+# Gmailはアーカイブし、Outlookはフォルダ移動で整理
+python mail_organizer.py apply --archive --filter
 ```
-*   **`apply` の主なオプション:**
-    *   `--config`: ルール定義ファイルのパス（デフォルト: `rules.json`）。
-    *   `--dry-run`: 実際の変更を行わずにシミュレーションします。
-    *   `--filter`: 今後届くメールにも自動でルールが適用されるよう、Gmail の「自動振り分けフィルタ」を作成します。
-    *   `--archive`: ラベル付与と同時に、メールを受信トレイからアーカイブし、受信トレイを空（Inbox Zero）にします。
+- `--archive`: メールの移動（アーカイブ）を行います。
+- `--filter`: 今後届くメールにも自動でルールが適用されるよう、Gmail の「自動振り分けフィルタ」を作成します（Gmail アカウントのみで有効）。
 
-#### **ステップ 3: 未分類メールの抽出とルールの反復強化 (推奨)**
-どのルールにも合致せず受信トレイ（INBOX）に残ってしまったメールを分析し、既存のルールを破壊することなくクエリを賢くアップデートします。
-
-1.  **未分類メールを一時ファイルに抽出:**
-    ```bash
-    python extract_unclassified.py
-    ```
-    受信トレイに残っているメールを検索し、`unclassified_emails.json` に保存します。
-2.  **AI によるルールの強化（Refine）:**
-    ```bash
-    python refine_rules.py
-    ```
-    `rules.json` と `unclassified_emails.json` を読み込み、`gemini-3.1-pro` が既存クエリをスマートに補強します。また、一括適用（整理）の実行時には、定義されたすべてのカスタムラベルを対象から除外する動的クエリを生成し、いかなるルールにも該当しなかった受信トレイ内のメールを 100% 確実にキャッチするため、22番目のカテゴリとして 「📁 その他・未分類」 （背景色: グレー）を自動的に割り当ててアーカイブします。
-    *(既存の `rules.json` は `rules.json.bak` として自動バックアップされます)*
-3.  **強化されたルールの再適用:**
-    ```bash
-    python zenmail.py apply --archive --filter
-    ```
-    新ルールが適用され、未分類だったメールも綺麗にアーカイブされます。
-
-#### **ステップ 4: 環境のクリーンアップ（リセット）**
+#### **ステップ 3: 環境のクリーンアップ（リセット）**
 もし設定を元に戻したくなった場合は、以下のコマンドで安全に元通りに復元できます。
 ```bash
-python zenmail.py reset
+# すべてのアカウントをリセット（カスタムラベル/フォルダを削除し、全メールを受信トレイに戻す）
+python mail_organizer.py reset
+
+# 特定のアカウントのみリセット
+python mail_organizer.py reset --account outlook_work
 ```
-*   すべてのカスタムラベルとフィルタ定義が削除されます。
-*   アーカイブされたすべてのメールからカスタムラベルが剥がされ、元の受信トレイ（INBOX）に安全に戻されます。
-*   `--force` オプションを指定すると、確認プロンプトをスキップして即時実行します。
 
 ---
 
 ## 🔌 MCP (Model Context Protocol) サーバー設定
 
-ZenMail Automator は Docker コンテナ上で動作する MCP サーバーとしても提供されており、ホスト環境を汚さずに Claude Desktop 等の AI アシスタントと連携できます。
+Docker コンテナ上で動作する MCP サーバーとして起動し、AI アシスタントと連携できます。
 
 ### 1. Docker イメージのビルド
 ```bash
-docker build -t gmail-manager .
+docker build -t mail-organizer .
 ```
 
 ### 2. Claude Desktop への登録
-`%APPDATA%\Claude\claude_desktop_config.json` (Windows) または `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) に以下の設定を追加します。
+`claude_desktop_config.json` に以下の設定を追加します。
 
 ```json
 {
   "mcpServers": {
-    "gmail-manager": {
+    "mail-organizer": {
       "command": "docker",
       "args": [
         "run",
         "-i",
         "--rm",
-        "-v", "C:\\Users\\<あなたのWindowsユーザー名>\\path\\to\\gmail-manager:/app",
+        "-v", "C:\\Users\\<あなたのユーザー名>\\path\\to\\gmail-manager:/app",
         "-e", "GEMINI_API_KEY=あなたのGEMINI_API_KEY",
-        "gmail-manager"
+        "mail-organizer"
       ]
     }
   }
 }
 ```
 
-> [!IMPORTANT]
-> *   `-v` (マウントパス) には、必ず `credentials.json` と `token.json` が配置されているプロジェクトの**絶対パス**を指定してください。これらが不足していると、コンテナ内の API 接続が失敗します。
-> *   Windows 環境では、パスの区切り文字として必ずダブルバックスラッシュ（`\\`）を使用してください。
-
-### 3. 利用可能な MCP ツール一覧
-
-AI アシスタントは以下のツールを介して Gmail 操作を自律的に実行できます：
-
-*   **`reset_gmail`**:
-    Gmail の初期化（カスタムラベル・フィルタの完全削除、全メールの INBOX 差し戻し）。
-*   **`analyze_emails`**:
-    過去メールを分析して最適な分類ルール（`rules.json`）を AI で生成します。
-    *   *引数*: `query` (デフォルト: `"newer_than:1y"`), `max_emails` (デフォルト: `500`), `num_categories` (デフォルト: `15`)
-*   **`apply_classification_rules`**:
-    `rules.json` のルールを Gmail に適用（ラベル作成、メールのアーカイブ、フィルタの自動設定を一括実行）。
-    *   *引数*: `archive` (デフォルト: `true`), `create_filters` (デフォルト: `true`)
-
 ---
-
-## 🛡️ 技術的な信頼性への取り組み
-
-大量のメールデータを Gmail API 経由で操作する際のトラブルを回避するため、以下の高度な対策を実装しています。
-
-*   **🚀 指数バックオフ付き自動リトライ (`utils.py`)**:
-    Gmail API やネットワークの一時的なエラー（タイムアウト、接続リセット、Broken Pipe等）を自動検出し、待機時間を段階的に増やしながら（5秒、10秒、15秒...）最大3回まで再試行します。
-*   **🐢 API レート制限の回避 (Pacing)**:
-    Gmail API の過剰な連続呼び出しによるレート制限エラー（HTTP 429）を防ぐため、バッチ操作や各 API リクエストの間に適切なウェイト（0.5秒）を挿入しています。
-*   **🌐 IPv4 強制パッチ (`auth.py`)**:
-    一部の Windows 環境やネットワーク環境において、Google API への IPv6 接続不良が原因で発生する長時間のタイムアウトや接続エラーを回避するため、ソケット通信レベルで IPv4 通信を強制するパッチを自動的に適用しています。
-
----
-
-## 🎨 整理カテゴリの定義 (22 カテゴリ)
-
-AI が分析して自動生成するカテゴリの定義です。各ラベルは Gmail API でサポートされているカラーコードを使用して美しく色分けされます。
-
-| ラベル名 | 背景色例 | 説明 |
-| :--- | :---: | :--- |
-| **💳 金融・決済** | 緑 (`#0b804b`) | クレジットカード、銀行口座、各種決済手続き完了通知など |
-| **🛒 ショッピング** | オレンジ (`#ffad47`) | ECサイトの注文確認、セール、オンラインショッピング関連 |
-| **💻 開発・技術インフラ** | 青 (`#285bac`) | GitHub, AWS, GCP, Firebase, 開発ツール等の通知 |
-| **🎮 エンタメ・配信** | 紫 (`#a479e2`) | Twitch, Steam, PlayStation, Netflix, Discordなどの通知 |
-| **🌐 Googleサービス** | 水色 (`#4a86e8`) | Googleアカウントセキュリティ、Play、One、カレンダー通知等 |
-| **📦 配送・追跡** | 黄 (`#fad165`) | ヤマト運輸、佐川急便など、お荷物の発送・お届け予定通知 |
-| **📝 ブログ・Web制作** | 緑 (`#16a766`) | WordPress, Elementor, Kadence WP等、サイト運営やSEO関連 |
-| **💼 クラウドソーシング** | 青緑 (`#43d692`) | クラウドワークス関連の案件紹介、ログイン、重要通知 |
-| **🏠 住まい・生活** | 薄橙 (`#ffd6a2`) | 不動産、賃料引き落とし、新生活サポートメール |
-| **🏛️ 行政・公共** | グレー (`#999999`) | 行政手続き、自治体連絡、安否状況確認・訓練メール |
-| **🛡️ 保険・健康** | 薄緑 (`#b9e4d0`) | au損保、JA共済、ヘルスケアプログラム等の通知 |
-| **👥 SNS・個人送信** | ピンク (`#f691b3`) | Facebook, Reddit, DeviantArt等のSNS、個人間のメール |
-| **✈️ 旅行・ライフスタイル** | 薄ピンク (`#fcdee8`) | じゃらん, ホットペッパービューティー, リクルートID等のサービス |
-| **🧠 AI・生産性ツール** | 濃灰 (`#434343`) | Perplexity, Claude, Notion, Genspark, Cline等の通知 |
-| **⚙️ デバイス・ソフトウェア**| 灰 (`#666666`) | ソニー、アドビ、ロジクール、パソコン工房等の機器・製品通知 |
-| **🏃 スポーツ・フィットネス**| 緑 (`#149e60`) | Garminスマートウォッチ、スポーツオーソリティ、MyFitnessPal等 |
-| **🚗 マイカー・車** | 茶 (`#cf8933`) | Hondaインターナビ、ホンダファイナンス、車両関連手続き等 |
-| **🏨 宿泊・ホテル予約** | 赤 (`#cc3a21`) | 東横INN、Booking.comなどのホテル宿泊予約・マイル関連 |
-| **🍔 フード・飲食予約** | 薄赤 (`#e66550`) | 食べログ（予約確認）、ピザーラ、飲食キャンペーン通知等 |
-| **🛍️ ファッション・衣類** | 薄ピンク (`#f7a7c0`) | アパレル通販GRLや、サイクルアパレル関連等の通知 |
-| **🔐 アカウント登録・システム通知**| 濃灰 (`#434343`) | 新規サービス登録認証、二段階認証コード、パスワードリセット等 |
-| **📁 その他・未分類** | 灰 (`#999999`) | 上記に当てはまらない、動的に検出された未分類の全メール |
-
----
-**ZenMail Automator** - *Less Clutter, More Focus.*
+**Mail Organizer** - *Simplify Your Inbox.*
